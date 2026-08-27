@@ -1,7 +1,13 @@
+"""
+URL configuration for weather_project project.
+"""
+
+from django.contrib import admin
 from django.urls import path
 
-from . import views
+from weather_app.views import weather_view
 
 urlpatterns = [
-    path('', views.weather_view, name='weather'),
+    path('admin/', admin.site.urls),
+    path('', weather_view, name='weather'),
 ]
