@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Application Tracker{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="mb-1">Application Dashboard</h1>
+      <p class="text-muted mb-0">Track opportunities, follow-ups, and hiring progress.</p>
+    </div>
+    <a href="{% url 'add_application' %}" class="btn btn-primary">Add Application</a>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <p class="text-muted small mb-1">Total</p>
+          <h3 class="mb-0">{{ total_count }}</h3>
+        </div>
+      </div>
+    </div>
+    {% for status, count in status_summary.items %}
+      <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body">
+            <p class="text-muted small mb-1">{{ status }}</p>
+            <h3 class="mb-0">{{ count }}</h3>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-2 align-items-end">
+        <div class="col-md-9">
+          <label for="status" class="form-label">Filter by status</label>
+          <select id="status" name="status" class="form-select" onchange="this.form.submit()">
+            <option value="All" {% if selected_status == 'All' %}selected{% endif %}>All</option>
+            <option value="Applied" {% if selected_status == 'Applied' %}selected{% endif %}>Applied</option>
+            <option value="Interview" {% if selected_status == 'Interview' %}selected{% endif %}>Interview</option>
+            <option value="Selected" {% if selected_status == 'Selected' %}selected{% endif %}>Selected</option>
+            <option value="Rejected" {% if selected_status == 'Rejected' %}selected{% endif %}>Rejected</option>
+          </select>
+        </div>
+        <div class="col-md-3 text-md-end">
+          <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100">Clear Filter</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Applied Date</th>
+              <th>Notes</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for app in applications %}
+              <tr>
+                <td class="fw-semibold">{{ app.company_name }}</td>
+                <td>{{ app.role }}</td>
+                <td><span class="badge {{ app.badge_class }} rounded-pill">{{ app.status }}</span></td>
+                <td>{{ app.applied_date }}</td>
+                <td>{{ app.notes|default:'—' }}</td>
+                <td class="text-end">
+                  <div class="btn-group btn-group-sm" role="group">
+                    <a href="{% url 'update_application' app.pk %}" class="btn btn-outline-primary">Edit</a>
+                    <form method="post" action="{% url 'delete_application' app.pk %}" class="d-inline">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Delete this application?');">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6" class="text-center text-muted py-4">No applications match this filter.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}
