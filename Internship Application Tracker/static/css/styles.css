@@ -1,0 +1,27 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+  border-radius: 1rem;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.5rem 0.7rem;
+}
+
+.btn-group .btn {
+  border-radius: 0.5rem;
+}
+
+.form-control,
+.form-select {
+  border-radius: 0.75rem;
+  padding: 0.7rem 0.8rem;
+}
